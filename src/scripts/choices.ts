@@ -286,7 +286,7 @@ class Choices implements Choices {
       (this.passedElement as WrappedSelect).options.forEach((option) => {
         this._presetChoices.push({
           value: option.value,
-          label: option.innerHTML,
+          label: option.innerHTML.trim(),
           selected: !!option.selected,
           disabled: option.disabled || option.parentNode.disabled,
           placeholder:
@@ -319,7 +319,7 @@ class Choices implements Choices {
     if (this.passedElement.isActive) {
       if (!this.config.silent) {
         console.warn(
-          'Trying to initialise Choices on element already initialised',
+          'Trying to initialize Choices on element already initialized',
           { element },
         );
       }

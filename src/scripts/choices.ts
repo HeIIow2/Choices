@@ -152,6 +152,27 @@ class Choices implements Choices {
       | HTMLSelectElement = '[data-choice]',
     userConfig: Partial<Options> = {},
   ) {
+
+
+    const passedElement =
+      typeof element === 'string' ? document.querySelector(element) : element;
+
+    if (
+      !(
+        passedElement instanceof HTMLInputElement ||
+        passedElement instanceof HTMLSelectElement
+      )
+    ) {
+      throw TypeError(
+        'Expected one of the following types text|select-one|select-multiple',
+      );
+    }
+
+    // read from data attributes if necessary
+    if (userConfig.allowHTML === undefined && "allowHtml" in passedElement.dataset) {
+      userConfig.allowHTML = passedElement.dataset.allowHtml === 'true';
+    }
+
     if (userConfig.allowHTML === undefined) {
       console.warn(
         'Deprecation warning: allowHTML will default to false in a future release. To render HTML in Choices, you will need to set it to true. Setting allowHTML will suppress this message.',
@@ -170,20 +191,6 @@ class Choices implements Choices {
       console.warn(
         'Unknown config option(s) passed',
         invalidConfigOptions.join(', '),
-      );
-    }
-
-    const passedElement =
-      typeof element === 'string' ? document.querySelector(element) : element;
-
-    if (
-      !(
-        passedElement instanceof HTMLInputElement ||
-        passedElement instanceof HTMLSelectElement
-      )
-    ) {
-      throw TypeError(
-        'Expected one of the following types text|select-one|select-multiple',
       );
     }
 
@@ -311,8 +318,6 @@ class Choices implements Choices {
       const optionContainer = document.getElementById(additionalOptionContainer);
 
       if (optionContainer) {
-        console.log('optionContainer', optionContainer);
-
         Array.from(optionContainer.children).forEach((option: HTMLElement) => {
           let value = option.getAttribute("value") || "";
 

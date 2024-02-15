@@ -236,6 +236,14 @@ var Choices = /** @class */function () {
       userConfig = {};
     }
     var _this = this;
+    var passedElement = typeof element === 'string' ? document.querySelector(element) : element;
+    if (!(passedElement instanceof HTMLInputElement || passedElement instanceof HTMLSelectElement)) {
+      throw TypeError('Expected one of the following types text|select-one|select-multiple');
+    }
+    // read from data attributes if necessary
+    if (userConfig.allowHTML === undefined && "allowHtml" in passedElement.dataset) {
+      userConfig.allowHTML = passedElement.dataset.allowHtml === 'true';
+    }
     if (userConfig.allowHTML === undefined) {
       console.warn('Deprecation warning: allowHTML will default to false in a future release. To render HTML in Choices, you will need to set it to true. Setting allowHTML will suppress this message.');
     }
@@ -250,10 +258,6 @@ var Choices = /** @class */function () {
     var invalidConfigOptions = (0, utils_1.diff)(this.config, defaults_1.DEFAULT_CONFIG);
     if (invalidConfigOptions.length) {
       console.warn('Unknown config option(s) passed', invalidConfigOptions.join(', '));
-    }
-    var passedElement = typeof element === 'string' ? document.querySelector(element) : element;
-    if (!(passedElement instanceof HTMLInputElement || passedElement instanceof HTMLSelectElement)) {
-      throw TypeError('Expected one of the following types text|select-one|select-multiple');
     }
     this._isTextElement = passedElement.type === constants_1.TEXT_TYPE;
     this._isSelectOneElement = passedElement.type === constants_1.SELECT_ONE_TYPE;
@@ -346,7 +350,6 @@ var Choices = /** @class */function () {
     if (additionalOptionContainer) {
       var optionContainer_1 = document.getElementById(additionalOptionContainer);
       if (optionContainer_1) {
-        console.log('optionContainer', optionContainer_1);
         Array.from(optionContainer_1.children).forEach(function (option) {
           var value = option.getAttribute("value") || "";
           _this._presetChoices.push({

@@ -78,7 +78,8 @@ a:focus {
   border: 1px solid #ddd;
   border-radius: 2.5px;
   font-size: 14px;
-  appearance: none;
+  -webkit-appearance: none;
+          appearance: none;
   margin-bottom: 24px;
 }
 
@@ -195,5 +196,3 @@ label + p {
 }
 
 /* =====  End of Section comment block  ====== */
-
-/*# sourceMappingURL=base.css.map */

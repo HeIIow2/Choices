@@ -221,6 +221,13 @@ Choices works with the following input types, referenced in the documentation as
 
 ## Configuration Options
 
+If you want to set global defaults for all instances of Choices, you can use the `Choices.defaults.options` object.
+This works with every option.
+
+```js
+Choices.defaults.options.noResultsText = 'No results found';
+```
+
 ### silent
 
 **Type:** `Boolean` **Default:** `false`

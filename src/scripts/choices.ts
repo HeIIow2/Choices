@@ -312,31 +312,34 @@ class Choices implements Choices {
     * is the attribute that defines the id of the additional option container
     */
 
-    const additionalOptionContainer = this.passedElement.element.getAttribute('data-choices-container');
+    let choicesContainer: null | HTMLElement = null;
 
-    if (additionalOptionContainer) {
-      const optionContainer = document.getElementById(additionalOptionContainer);
-
-      if (optionContainer) {
-        Array.from(optionContainer.children).forEach((option: HTMLElement) => {
-          let value = option.getAttribute("value") || "";
-
-          this._presetChoices.push({
-            value: value,
-            label: option.innerHTML.trim(),
-            selected: option.hasAttribute("selected"),
-            disabled: option.hasAttribute("disabled") || optionContainer.hasAttribute("disabled"),
-            placeholder: value === '' || option.hasAttribute('placeholder'),
-            customProperties: parseCustomProperties(option.dataset.customProperties),
-          });
-        });
-
-        optionContainer.remove();
+    let choiceContainerQuery = this.passedElement.element.dataset.choicesContainer || userConfig.choicesContainer;
+    if (choiceContainerQuery) {
+      if (choiceContainerQuery instanceof HTMLElement) {
+        choicesContainer = choiceContainerQuery;
       } else {
-        console.warn(
-          `Could not find a container with id of ${additionalOptionContainer}, that is defined in the data-choices-container attribute`,
-        );
+        choicesContainer = this.passedElement.element.closest(choiceContainerQuery) || document.getElementById(choiceContainerQuery) || document.querySelector(choiceContainerQuery);
       }
+    }
+
+    if (choicesContainer ) {
+      const disableAll = choicesContainer.hasAttribute("disabled");
+
+      Array.from(choicesContainer.children).forEach((option: HTMLElement) => {
+        let value = option.getAttribute("value") || "";
+
+        this._presetChoices.push({
+          value: value,
+          label: option.innerHTML.trim(),
+          selected: option.hasAttribute("selected"),
+          disabled: option.hasAttribute("disabled") || disableAll,
+          placeholder: value === '' || option.hasAttribute('placeholder'),
+          customProperties: parseCustomProperties(option.dataset.customProperties),
+        });
+      });
+
+      choicesContainer.remove();
     }
 
     this._render = this._render.bind(this);

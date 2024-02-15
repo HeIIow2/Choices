@@ -295,6 +295,13 @@ Pass an array of objects:
 }]
 ```
 
+### choicesContainer
+
+You can't place HTML directly inside option or select tags.
+This is a security feature, as it prevents XSS (cross-site scripting) attacks.
+If you want to do it regardless, you can set `allowHTML` to `true`, and set the choicesContainer to a valid query selector string or html element.
+The children of the `choicesContainer` will be used instead of the option tags inside the select.
+
 ### renderChoiceLimit
 
 **Type:** `Number` **Default:** `-1`

@@ -346,25 +346,29 @@ var Choices = /** @class */function () {
     *   data-choices-container
     * is the attribute that defines the id of the additional option container
     */
-    var additionalOptionContainer = this.passedElement.element.getAttribute('data-choices-container');
-    if (additionalOptionContainer) {
-      var optionContainer_1 = document.getElementById(additionalOptionContainer);
-      if (optionContainer_1) {
-        Array.from(optionContainer_1.children).forEach(function (option) {
-          var value = option.getAttribute("value") || "";
-          _this._presetChoices.push({
-            value: value,
-            label: option.innerHTML.trim(),
-            selected: option.hasAttribute("selected"),
-            disabled: option.hasAttribute("disabled") || optionContainer_1.hasAttribute("disabled"),
-            placeholder: value === '' || option.hasAttribute('placeholder'),
-            customProperties: (0, utils_1.parseCustomProperties)(option.dataset.customProperties)
-          });
-        });
-        optionContainer_1.remove();
+    var choicesContainer = null;
+    var choiceContainerQuery = this.passedElement.element.dataset.choicesContainer || userConfig.choicesContainer;
+    if (choiceContainerQuery) {
+      if (choiceContainerQuery instanceof HTMLElement) {
+        choicesContainer = choiceContainerQuery;
       } else {
-        console.warn("Could not find a container with id of ".concat(additionalOptionContainer, ", that is defined in the data-choices-container attribute"));
+        choicesContainer = this.passedElement.element.closest(choiceContainerQuery) || document.getElementById(choiceContainerQuery) || document.querySelector(choiceContainerQuery);
       }
+    }
+    if (choicesContainer) {
+      var disableAll_1 = choicesContainer.hasAttribute("disabled");
+      Array.from(choicesContainer.children).forEach(function (option) {
+        var value = option.getAttribute("value") || "";
+        _this._presetChoices.push({
+          value: value,
+          label: option.innerHTML.trim(),
+          selected: option.hasAttribute("selected"),
+          disabled: option.hasAttribute("disabled") || disableAll_1,
+          placeholder: value === '' || option.hasAttribute('placeholder'),
+          customProperties: (0, utils_1.parseCustomProperties)(option.dataset.customProperties)
+        });
+      });
+      choicesContainer.remove();
     }
     this._render = this._render.bind(this);
     this._onFocus = this._onFocus.bind(this);
@@ -2900,6 +2904,7 @@ exports.DEFAULT_CLASSNAMES = {
 exports.DEFAULT_CONFIG = {
   items: [],
   choices: [],
+  choicesContainer: null,
   silent: false,
   renderChoiceLimit: -1,
   maxItemCount: -1,

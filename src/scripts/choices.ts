@@ -281,6 +281,7 @@ class Choices implements Choices {
       );
       this._presetItems = (this._presetItems as string[]).concat(splitValues);
     }
+
     // Create array of choices from option elements
     if ((this.passedElement as WrappedSelect).options) {
       (this.passedElement as WrappedSelect).options.forEach((option) => {
@@ -296,6 +297,41 @@ class Choices implements Choices {
           ),
         });
       });
+    }
+
+    /*
+    * If an additional option element is defined, then add its children as choices
+    *   data-choices-container
+    * is the attribute that defines the id of the additional option container
+    */
+
+    const additionalOptionContainer = this.passedElement.element.getAttribute('data-choices-container');
+
+    if (additionalOptionContainer) {
+      const optionContainer = document.getElementById(additionalOptionContainer);
+
+      if (optionContainer) {
+        console.log('optionContainer', optionContainer);
+
+        Array.from(optionContainer.children).forEach((option: HTMLElement) => {
+          let value = option.getAttribute("value") || "";
+
+          this._presetChoices.push({
+            value: value,
+            label: option.innerHTML.trim(),
+            selected: option.hasAttribute("selected"),
+            disabled: option.hasAttribute("disabled") || optionContainer.hasAttribute("disabled"),
+            placeholder: value === '' || option.hasAttribute('placeholder'),
+            customProperties: parseCustomProperties(option.dataset.customProperties),
+          });
+        });
+
+        optionContainer.remove();
+      } else {
+        console.warn(
+          `Could not find a container with id of ${additionalOptionContainer}, that is defined in the data-choices-container attribute`,
+        );
+      }
     }
 
     this._render = this._render.bind(this);

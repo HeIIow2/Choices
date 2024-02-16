@@ -307,7 +307,7 @@ class Choices implements Choices {
           customProperties: parseCustomProperties(
             option.dataset.customProperties,
           ),
-          classList: Array.from(option.classList),
+          classList: (this.config.copyOptionClasses ? Array.from(option.classList) : []),
         });
       });
     }
@@ -335,8 +335,6 @@ class Choices implements Choices {
       Array.from(choicesContainer.children).forEach((option: HTMLElement) => {
         let value = option.getAttribute("value") || "";
 
-        console.log("class list to push in _presetChoices", Array.from(option.classList))
-
         this._presetChoices.push({
           value: value,
           label: option.innerHTML.trim(),
@@ -344,7 +342,7 @@ class Choices implements Choices {
           disabled: option.hasAttribute("disabled") || disableAll,
           placeholder: value === '' || option.hasAttribute('placeholder'),
           customProperties: parseCustomProperties(option.dataset.customProperties),
-          classList: Array.from(option.classList),
+          classList: (this.config.copyOptionClasses ? Array.from(option.classList) : []),
         });
       });
 
@@ -2106,8 +2104,6 @@ class Choices implements Choices {
     const choiceLabel = label || value;
     const choiceId = choices ? choices.length + 1 : 1;
     const choiceElementId = `${this._baseId}-${this._idNames.itemChoice}-${choiceId}`;
-
-    console.log("_addChoice", classList, classList || [])
 
     this._store.dispatch(
       addChoice({

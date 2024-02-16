@@ -346,7 +346,7 @@ var Choices = /** @class */function () {
           disabled: option.disabled || option.parentNode.disabled,
           placeholder: option.value === '' || option.hasAttribute('placeholder'),
           customProperties: (0, utils_1.parseCustomProperties)(option.dataset.customProperties),
-          classList: Array.from(option.classList)
+          classList: _this.config.copyOptionClasses ? Array.from(option.classList) : []
         });
       });
     }
@@ -376,7 +376,7 @@ var Choices = /** @class */function () {
           disabled: option.hasAttribute("disabled") || disableAll_1,
           placeholder: value === '' || option.hasAttribute('placeholder'),
           customProperties: (0, utils_1.parseCustomProperties)(option.dataset.customProperties),
-          classList: Array.from(option.classList)
+          classList: _this.config.copyOptionClasses ? Array.from(option.classList) : []
         });
       });
       choicesContainer.remove();

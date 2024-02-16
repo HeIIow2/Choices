@@ -243,8 +243,6 @@ const templates = {
       div.classList.add(placeholder);
     }
 
-    console.log("class list choice template", classList)
-
     classList?.forEach((className) => {
       div.classList.add(className);
     });
@@ -336,8 +334,6 @@ const templates = {
     if (customProperties) {
       opt.dataset.customProperties = `${customProperties}`;
     }
-
-    console.log("class list option template", classList)
 
     classList?.forEach((className) => {
       opt.classList.add(className);

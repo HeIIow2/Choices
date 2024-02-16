@@ -228,6 +228,19 @@ This works with every option.
 Choices.defaults.options.noResultsText = 'No results found';
 ```
 
+Another option is the use of `Choices.setDefaultOptions`, if you inend
+to set multiple choices at the same time.
+
+```js
+Choices.setDefaultOptions({
+  allowHtml: false,
+  loadingText: 'Loading...',
+  noResultsText: 'No results found',
+  noChoicesText: 'No choices to choose from',
+  itemSelectText: 'Press to select',
+})
+```
+
 ### silent
 
 **Type:** `Boolean` **Default:** `false`

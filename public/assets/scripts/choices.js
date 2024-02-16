@@ -399,6 +399,9 @@ var Choices = /** @class */function () {
     // Let's go
     this.init();
   }
+  Choices.setDefaultOptions = function (defaultOptions) {
+    USER_DEFAULTS = (0, deepmerge_1.default)(USER_DEFAULTS, defaultOptions);
+  };
   Object.defineProperty(Choices, "defaults", {
     get: function () {
       return Object.preventExtensions({

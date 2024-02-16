@@ -13,3 +13,4 @@ cypress/screenshots
 
 # for testing in smaller files
 public/_**.html
+private_build.sh

@@ -12,6 +12,7 @@ import templates from './templates';
  * @author Josh Johnson<josh@joshuajohnson.co.uk>
  */
 declare class Choices implements Choices {
+    static setDefaultOptions(defaultOptions: Partial<Options>): void;
     static get defaults(): {
         options: Partial<Options>;
         templates: typeof templates;

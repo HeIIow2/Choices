@@ -57,13 +57,18 @@ const IS_IE11 =
   '-ms-scroll-limit' in document.documentElement.style &&
   '-ms-ime-align' in document.documentElement.style;
 
-const USER_DEFAULTS: Partial<Options> = {};
+let USER_DEFAULTS: Partial<Options> = {};
 
 /**
  * Choices
  * @author Josh Johnson<josh@joshuajohnson.co.uk>
  */
 class Choices implements Choices {
+  static setDefaultOptions(defaultOptions: Partial<Options>): void {
+    USER_DEFAULTS = merge(USER_DEFAULTS, defaultOptions);
+  }
+
+
   static get defaults(): {
     options: Partial<Options>;
     templates: typeof templates;
@@ -152,8 +157,6 @@ class Choices implements Choices {
       | HTMLSelectElement = '[data-choice]',
     userConfig: Partial<Options> = {},
   ) {
-
-
     const passedElement =
       typeof element === 'string' ? document.querySelector(element) : element;
 

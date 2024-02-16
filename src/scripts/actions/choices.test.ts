@@ -13,6 +13,7 @@ describe('actions/choices', () => {
       const customProperties = { test: true };
       const placeholder = true;
       const keyCode = 10;
+      const classList = ['test'];
 
       const expectedAction: actions.AddChoiceAction = {
         type: 'ADD_CHOICE',
@@ -25,6 +26,7 @@ describe('actions/choices', () => {
         customProperties,
         placeholder,
         keyCode,
+        classList,
       };
 
       expect(
@@ -38,6 +40,7 @@ describe('actions/choices', () => {
           customProperties,
           placeholder,
           keyCode,
+          classList,
         }),
       ).to.eql(expectedAction);
     });

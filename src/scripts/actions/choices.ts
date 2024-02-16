@@ -10,6 +10,7 @@ export interface AddChoiceAction {
   disabled: boolean;
   elementId: number;
   customProperties: object;
+  classList: string[];
   placeholder: boolean;
   keyCode: number;
 }
@@ -43,6 +44,7 @@ export const addChoice = ({
   customProperties,
   placeholder,
   keyCode,
+  classList,
 }): AddChoiceAction => ({
   type: ACTION_TYPES.ADD_CHOICE,
   value,
@@ -54,6 +56,7 @@ export const addChoice = ({
   customProperties,
   placeholder,
   keyCode,
+  classList,
 });
 
 export const filterChoices = (

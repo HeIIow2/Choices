@@ -315,6 +315,8 @@ This is a security feature, as it prevents XSS (cross-site scripting) attacks.
 If you want to do it regardless, you can set `allowHTML` to `true`, and set the choicesContainer to a valid query selector string or html element.
 The children of the `choicesContainer` will be used instead of the option tags inside the select.
 
+The according html attribute is `data-choices-container`.
+
 ### renderChoiceLimit
 
 **Type:** `Number` **Default:** `-1`

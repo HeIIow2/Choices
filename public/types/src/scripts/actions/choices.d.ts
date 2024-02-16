@@ -9,6 +9,7 @@ export interface AddChoiceAction {
     disabled: boolean;
     elementId: number;
     customProperties: object;
+    classList: string[];
     placeholder: boolean;
     keyCode: number;
 }
@@ -27,7 +28,7 @@ export interface ActivateChoicesAction {
 export interface ClearChoicesAction {
     type: typeof ACTION_TYPES.CLEAR_CHOICES;
 }
-export declare const addChoice: ({ value, label, id, groupId, disabled, elementId, customProperties, placeholder, keyCode, }: {
+export declare const addChoice: ({ value, label, id, groupId, disabled, elementId, customProperties, placeholder, keyCode, classList, }: {
     value: any;
     label: any;
     id: any;
@@ -37,6 +38,7 @@ export declare const addChoice: ({ value, label, id, groupId, disabled, elementI
     customProperties: any;
     placeholder: any;
     keyCode: any;
+    classList: any;
 }) => AddChoiceAction;
 export declare const filterChoices: (results: Result<Choice>[]) => FilterChoicesAction;
 export declare const activateChoices: (active?: boolean) => ActivateChoicesAction;

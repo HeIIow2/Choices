@@ -467,5 +467,10 @@ export interface Options {
      * @default null
      */
     callbackOnCreateTemplates: ((template: Types.StrToEl) => void) | null;
+    /**
+     * If true, all classes from the single option elements will be copied to
+     * the new dropdown items.
+     */
+    copyOptionClasses: boolean;
 }
 //# sourceMappingURL=options.d.ts.map

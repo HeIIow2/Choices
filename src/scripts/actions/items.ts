@@ -10,6 +10,7 @@ export interface AddItemAction {
   customProperties: object;
   placeholder: boolean;
   keyCode: number;
+  classList?: string[];
 }
 
 export interface RemoveItemAction {
@@ -33,6 +34,7 @@ export const addItem = ({
   customProperties,
   placeholder,
   keyCode,
+  classList,
 }: {
   id: number;
   value: string;
@@ -42,6 +44,7 @@ export const addItem = ({
   customProperties: object;
   placeholder: boolean;
   keyCode: number;
+  classList?: string[];
 }): AddItemAction => ({
   type: ACTION_TYPES.ADD_ITEM,
   value,
@@ -52,6 +55,7 @@ export const addItem = ({
   customProperties,
   placeholder,
   keyCode,
+  classList,
 });
 
 export const removeItem = (id: number, choiceId: number): RemoveItemAction => ({

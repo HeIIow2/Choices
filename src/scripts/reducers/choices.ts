@@ -35,6 +35,7 @@ export default function choices(
         selected: false,
         active: true,
         score: 9999,
+        classList: addChoiceAction.classList || [],
         customProperties: addChoiceAction.customProperties,
         placeholder: addChoiceAction.placeholder || false,
       };
@@ -50,8 +51,8 @@ export default function choices(
     case 'ADD_ITEM': {
       const addItemAction = action as AddItemAction;
 
-      // When an item is added and it has an associated choice,
-      // we want to disable it so it can't be chosen again
+      // When an item is added, and it has an associated choice,
+      // we want to disable it, so it can't be chosen again
       if (addItemAction.choiceId > -1) {
         return state.map((obj) => {
           const choice = obj;

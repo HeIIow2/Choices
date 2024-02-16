@@ -176,11 +176,13 @@ class Choices implements Choices {
       userConfig.allowHTML = passedElement.dataset.allowHtml === 'true';
     }
 
+    /*
     if (userConfig.allowHTML === undefined) {
       console.warn(
         'Deprecation warning: allowHTML will default to false in a future release. To render HTML in Choices, you will need to set it to true. Setting allowHTML will suppress this message.',
       );
     }
+    */
 
     this.config = merge.all<Options>(
       [DEFAULT_CONFIG, Choices.defaults.options, userConfig],
@@ -305,6 +307,7 @@ class Choices implements Choices {
           customProperties: parseCustomProperties(
             option.dataset.customProperties,
           ),
+          classList: Array.from(option.classList),
         });
       });
     }
@@ -332,6 +335,8 @@ class Choices implements Choices {
       Array.from(choicesContainer.children).forEach((option: HTMLElement) => {
         let value = option.getAttribute("value") || "";
 
+        console.log("class list to push in _presetChoices", Array.from(option.classList))
+
         this._presetChoices.push({
           value: value,
           label: option.innerHTML.trim(),
@@ -339,6 +344,7 @@ class Choices implements Choices {
           disabled: option.hasAttribute("disabled") || disableAll,
           placeholder: value === '' || option.hasAttribute('placeholder'),
           customProperties: parseCustomProperties(option.dataset.customProperties),
+          classList: Array.from(option.classList),
         });
       });
 
@@ -774,6 +780,7 @@ class Choices implements Choices {
           isDisabled: !!choice.disabled,
           placeholder: !!choice.placeholder,
           customProperties: choice.customProperties,
+          classList: choice.classList,
         });
       }
     });
@@ -1091,6 +1098,7 @@ class Choices implements Choices {
       choiceId: placeholderChoice.id,
       groupId: placeholderChoice.groupId,
       placeholder: placeholderChoice.placeholder,
+      classList: placeholderChoice.classList,
     });
 
     this._triggerChange(placeholderChoice.value);
@@ -1193,6 +1201,7 @@ class Choices implements Choices {
           customProperties: choice.customProperties,
           placeholder: choice.placeholder,
           keyCode: choice.keyCode,
+          classList: choice.classList,
         });
 
         this._triggerChange(choice.value);
@@ -1990,6 +1999,7 @@ class Choices implements Choices {
     customProperties = {},
     placeholder = false,
     keyCode = -1,
+    classList = [],
   }: {
     value: string;
     label?: string | null;
@@ -1998,6 +2008,7 @@ class Choices implements Choices {
     customProperties?: object;
     placeholder?: boolean;
     keyCode?: number;
+    classList?: string[];
   }): void {
     let passedValue = typeof value === 'string' ? value.trim() : value;
 
@@ -2027,6 +2038,7 @@ class Choices implements Choices {
         customProperties,
         placeholder,
         keyCode,
+        classList,
       }),
     );
 
@@ -2073,6 +2085,7 @@ class Choices implements Choices {
     customProperties = {},
     placeholder = false,
     keyCode = -1,
+    classList = [],
   }: {
     value: string;
     label?: string | null;
@@ -2082,6 +2095,7 @@ class Choices implements Choices {
     customProperties?: Record<string, any>;
     placeholder?: boolean;
     keyCode?: number;
+    classList?: string[];
   }): void {
     if (typeof value === 'undefined' || value === null) {
       return;
@@ -2092,6 +2106,8 @@ class Choices implements Choices {
     const choiceLabel = label || value;
     const choiceId = choices ? choices.length + 1 : 1;
     const choiceElementId = `${this._baseId}-${this._idNames.itemChoice}-${choiceId}`;
+
+    console.log("_addChoice", classList, classList || [])
 
     this._store.dispatch(
       addChoice({
@@ -2104,6 +2120,7 @@ class Choices implements Choices {
         customProperties,
         placeholder,
         keyCode,
+        classList: classList || [],
       }),
     );
 
@@ -2115,6 +2132,7 @@ class Choices implements Choices {
         customProperties,
         placeholder,
         keyCode,
+        classList: classList || [],
       });
     }
   }
@@ -2148,6 +2166,7 @@ class Choices implements Choices {
           groupId,
           customProperties: choice.customProperties,
           placeholder: choice.placeholder,
+          classList: (this.config.copyOptionClasses ? Array.from(choice.classList) : []),
         });
       };
 
@@ -2296,6 +2315,7 @@ class Choices implements Choices {
         isSelected: placeholderChoice.selected,
         isDisabled: placeholderChoice.disabled,
         placeholder: true,
+        classList: (this.config.copyOptionClasses ? Array.from(placeholderChoice.classList) : []),
       });
     }
 
@@ -2319,7 +2339,7 @@ class Choices implements Choices {
     );
 
     choices.forEach((choice, index) => {
-      const { value = '', label, customProperties, placeholder } = choice;
+      const { value = '', label, customProperties, placeholder, classList } = choice;
 
       if (this._isSelectElement) {
         // If the choice is actually a group
@@ -2349,7 +2369,8 @@ class Choices implements Choices {
             isSelected: !!isSelected,
             isDisabled: !!isDisabled,
             placeholder: !!placeholder,
-            customProperties,
+            customProperties: customProperties,
+            classList: classList,
           });
         }
       } else {
@@ -2359,7 +2380,8 @@ class Choices implements Choices {
           isSelected: !!choice.selected,
           isDisabled: !!choice.disabled,
           placeholder: !!choice.placeholder,
-          customProperties,
+          customProperties: customProperties,
+          classList: classList,
         });
       }
     });
@@ -2374,6 +2396,7 @@ class Choices implements Choices {
           choiceId: item.id,
           customProperties: item.customProperties,
           placeholder: item.placeholder,
+          classList: item.classList,
         });
       }
 
@@ -2403,6 +2426,7 @@ class Choices implements Choices {
             isDisabled: false,
             customProperties: item.customProperties,
             placeholder: item.placeholder,
+            classList: (this.config.copyOptionClasses ? Array.from(item.classList) : []),
           });
         } else {
           this._addItem({
@@ -2411,6 +2435,7 @@ class Choices implements Choices {
             choiceId: item.id,
             customProperties: item.customProperties,
             placeholder: item.placeholder,
+            classList: (this.config.copyOptionClasses ? Array.from(item.classList) : []),
           });
         }
       },
@@ -2449,6 +2474,7 @@ class Choices implements Choices {
         customProperties: foundChoice.customProperties,
         placeholder: foundChoice.placeholder,
         keyCode: foundChoice.keyCode,
+        classList: foundChoice.classList,
       });
     }
   }

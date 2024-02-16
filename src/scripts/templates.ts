@@ -98,6 +98,7 @@ const templates = {
       disabled,
       highlighted,
       placeholder: isPlaceholder,
+      classList: classList,
     }: Item,
     removeItemButton: boolean,
   ): HTMLDivElement {
@@ -126,6 +127,10 @@ const templates = {
     }
 
     div.classList.add(highlighted ? highlightedState : itemSelectable);
+
+    classList?.forEach((className) => {
+      div.classList.add(className);
+    });
 
     if (removeItemButton) {
       if (disabled) {
@@ -217,6 +222,7 @@ const templates = {
       label,
       groupId,
       elementId,
+      classList,
       disabled: isDisabled,
       selected: isSelected,
       placeholder: isPlaceholder,
@@ -236,6 +242,12 @@ const templates = {
     if (isPlaceholder) {
       div.classList.add(placeholder);
     }
+
+    console.log("class list choice template", classList)
+
+    classList?.forEach((className) => {
+      div.classList.add(className);
+    });
 
     div.setAttribute('role', groupId && groupId > 0 ? 'treeitem' : 'option');
 
@@ -317,12 +329,19 @@ const templates = {
     customProperties,
     active,
     disabled,
+    classList,
   }: Item): HTMLOptionElement {
     const opt = new Option(label, value, false, active);
 
     if (customProperties) {
       opt.dataset.customProperties = `${customProperties}`;
     }
+
+    console.log("class list option template", classList)
+
+    classList?.forEach((className) => {
+      opt.classList.add(className);
+    });
 
     opt.disabled = !!disabled;
 

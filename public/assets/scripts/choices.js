@@ -32,7 +32,8 @@ var addChoice = function (_a) {
     elementId = _a.elementId,
     customProperties = _a.customProperties,
     placeholder = _a.placeholder,
-    keyCode = _a.keyCode;
+    keyCode = _a.keyCode,
+    classList = _a.classList;
   return {
     type: constants_1.ACTION_TYPES.ADD_CHOICE,
     value: value,
@@ -43,7 +44,8 @@ var addChoice = function (_a) {
     elementId: elementId,
     customProperties: customProperties,
     placeholder: placeholder,
-    keyCode: keyCode
+    keyCode: keyCode,
+    classList: classList
   };
 };
 exports.addChoice = addChoice;
@@ -118,7 +120,8 @@ var addItem = function (_a) {
     groupId = _a.groupId,
     customProperties = _a.customProperties,
     placeholder = _a.placeholder,
-    keyCode = _a.keyCode;
+    keyCode = _a.keyCode,
+    classList = _a.classList;
   return {
     type: constants_1.ACTION_TYPES.ADD_ITEM,
     value: value,
@@ -128,7 +131,8 @@ var addItem = function (_a) {
     groupId: groupId,
     customProperties: customProperties,
     placeholder: placeholder,
-    keyCode: keyCode
+    keyCode: keyCode,
+    classList: classList
   };
 };
 exports.addItem = addItem;
@@ -244,9 +248,13 @@ var Choices = /** @class */function () {
     if (userConfig.allowHTML === undefined && "allowHtml" in passedElement.dataset) {
       userConfig.allowHTML = passedElement.dataset.allowHtml === 'true';
     }
+    /*
     if (userConfig.allowHTML === undefined) {
-      console.warn('Deprecation warning: allowHTML will default to false in a future release. To render HTML in Choices, you will need to set it to true. Setting allowHTML will suppress this message.');
+      console.warn(
+        'Deprecation warning: allowHTML will default to false in a future release. To render HTML in Choices, you will need to set it to true. Setting allowHTML will suppress this message.',
+      );
     }
+    */
     this.config = deepmerge_1.default.all([defaults_1.DEFAULT_CONFIG, Choices.defaults.options, userConfig],
     // When merging array configs, replace with a copy of the userConfig array,
     // instead of concatenating with the default array
@@ -337,7 +345,8 @@ var Choices = /** @class */function () {
           selected: !!option.selected,
           disabled: option.disabled || option.parentNode.disabled,
           placeholder: option.value === '' || option.hasAttribute('placeholder'),
-          customProperties: (0, utils_1.parseCustomProperties)(option.dataset.customProperties)
+          customProperties: (0, utils_1.parseCustomProperties)(option.dataset.customProperties),
+          classList: Array.from(option.classList)
         });
       });
     }
@@ -359,13 +368,15 @@ var Choices = /** @class */function () {
       var disableAll_1 = choicesContainer.hasAttribute("disabled");
       Array.from(choicesContainer.children).forEach(function (option) {
         var value = option.getAttribute("value") || "";
+        console.log("class list to push in _presetChoices", Array.from(option.classList));
         _this._presetChoices.push({
           value: value,
           label: option.innerHTML.trim(),
           selected: option.hasAttribute("selected"),
           disabled: option.hasAttribute("disabled") || disableAll_1,
           placeholder: value === '' || option.hasAttribute('placeholder'),
-          customProperties: (0, utils_1.parseCustomProperties)(option.dataset.customProperties)
+          customProperties: (0, utils_1.parseCustomProperties)(option.dataset.customProperties),
+          classList: Array.from(option.classList)
         });
       });
       choicesContainer.remove();
@@ -775,7 +786,8 @@ var Choices = /** @class */function () {
           isSelected: !!choice.selected,
           isDisabled: !!choice.disabled,
           placeholder: !!choice.placeholder,
-          customProperties: choice.customProperties
+          customProperties: choice.customProperties,
+          classList: choice.classList
         });
       }
     });
@@ -1017,7 +1029,8 @@ var Choices = /** @class */function () {
       label: placeholderChoice.label,
       choiceId: placeholderChoice.id,
       groupId: placeholderChoice.groupId,
-      placeholder: placeholderChoice.placeholder
+      placeholder: placeholderChoice.placeholder,
+      classList: placeholderChoice.classList
     });
     this._triggerChange(placeholderChoice.value);
   };
@@ -1089,7 +1102,8 @@ var Choices = /** @class */function () {
           groupId: choice.groupId,
           customProperties: choice.customProperties,
           placeholder: choice.placeholder,
-          keyCode: choice.keyCode
+          keyCode: choice.keyCode,
+          classList: choice.classList
         });
         this._triggerChange(choice.value);
       }
@@ -1694,7 +1708,9 @@ var Choices = /** @class */function () {
       _f = _a.placeholder,
       placeholder = _f === void 0 ? false : _f,
       _g = _a.keyCode,
-      keyCode = _g === void 0 ? -1 : _g;
+      keyCode = _g === void 0 ? -1 : _g,
+      _h = _a.classList,
+      classList = _h === void 0 ? [] : _h;
     var passedValue = typeof value === 'string' ? value.trim() : value;
     var items = this._store.items;
     var passedLabel = label || passedValue;
@@ -1717,7 +1733,8 @@ var Choices = /** @class */function () {
       groupId: groupId,
       customProperties: customProperties,
       placeholder: placeholder,
-      keyCode: keyCode
+      keyCode: keyCode,
+      classList: classList
     }));
     if (this._isSelectOneElement) {
       this.removeActiveItems(id);
@@ -1767,7 +1784,9 @@ var Choices = /** @class */function () {
       _g = _a.placeholder,
       placeholder = _g === void 0 ? false : _g,
       _h = _a.keyCode,
-      keyCode = _h === void 0 ? -1 : _h;
+      keyCode = _h === void 0 ? -1 : _h,
+      _j = _a.classList,
+      classList = _j === void 0 ? [] : _j;
     if (typeof value === 'undefined' || value === null) {
       return;
     }
@@ -1776,6 +1795,7 @@ var Choices = /** @class */function () {
     var choiceLabel = label || value;
     var choiceId = choices ? choices.length + 1 : 1;
     var choiceElementId = "".concat(this._baseId, "-").concat(this._idNames.itemChoice, "-").concat(choiceId);
+    console.log("_addChoice", classList, classList || []);
     this._store.dispatch((0, choices_1.addChoice)({
       id: choiceId,
       groupId: groupId,
@@ -1785,7 +1805,8 @@ var Choices = /** @class */function () {
       disabled: isDisabled,
       customProperties: customProperties,
       placeholder: placeholder,
-      keyCode: keyCode
+      keyCode: keyCode,
+      classList: classList || []
     }));
     if (isSelected) {
       this._addItem({
@@ -1794,7 +1815,8 @@ var Choices = /** @class */function () {
         choiceId: choiceId,
         customProperties: customProperties,
         placeholder: placeholder,
-        keyCode: keyCode
+        keyCode: keyCode,
+        classList: classList || []
       });
     }
   };
@@ -1825,7 +1847,8 @@ var Choices = /** @class */function () {
           isDisabled: isOptDisabled,
           groupId: groupId,
           customProperties: choice.customProperties,
-          placeholder: choice.placeholder
+          placeholder: choice.placeholder,
+          classList: _this.config.copyOptionClasses ? Array.from(choice.classList) : []
         });
       };
       groupChoices.forEach(addGroupChoices);
@@ -1934,7 +1957,8 @@ var Choices = /** @class */function () {
         label: placeholderChoice.innerHTML,
         isSelected: placeholderChoice.selected,
         isDisabled: placeholderChoice.disabled,
-        placeholder: true
+        placeholder: true,
+        classList: this.config.copyOptionClasses ? Array.from(placeholderChoice.classList) : []
       });
     }
     groups.forEach(function (group) {
@@ -1961,7 +1985,8 @@ var Choices = /** @class */function () {
         value = _a === void 0 ? '' : _a,
         label = choice.label,
         customProperties = choice.customProperties,
-        placeholder = choice.placeholder;
+        placeholder = choice.placeholder,
+        classList = choice.classList;
       if (_this._isSelectElement) {
         // If the choice is actually a group
         if (choice.choices) {
@@ -1985,7 +2010,8 @@ var Choices = /** @class */function () {
             isSelected: !!isSelected,
             isDisabled: !!isDisabled,
             placeholder: !!placeholder,
-            customProperties: customProperties
+            customProperties: customProperties,
+            classList: classList
           });
         }
       } else {
@@ -1995,7 +2021,8 @@ var Choices = /** @class */function () {
           isSelected: !!choice.selected,
           isDisabled: !!choice.disabled,
           placeholder: !!choice.placeholder,
-          customProperties: customProperties
+          customProperties: customProperties,
+          classList: classList
         });
       }
     });
@@ -2009,7 +2036,8 @@ var Choices = /** @class */function () {
           label: item.label,
           choiceId: item.id,
           customProperties: item.customProperties,
-          placeholder: item.placeholder
+          placeholder: item.placeholder,
+          classList: item.classList
         });
       }
       if (typeof item === 'string') {
@@ -2036,7 +2064,8 @@ var Choices = /** @class */function () {
             isSelected: true,
             isDisabled: false,
             customProperties: item.customProperties,
-            placeholder: item.placeholder
+            placeholder: item.placeholder,
+            classList: _this.config.copyOptionClasses ? Array.from(item.classList) : []
           });
         } else {
           _this._addItem({
@@ -2044,7 +2073,8 @@ var Choices = /** @class */function () {
             label: item.label,
             choiceId: item.id,
             customProperties: item.customProperties,
-            placeholder: item.placeholder
+            placeholder: item.placeholder,
+            classList: _this.config.copyOptionClasses ? Array.from(item.classList) : []
           });
         }
       },
@@ -2080,7 +2110,8 @@ var Choices = /** @class */function () {
         groupId: foundChoice.groupId,
         customProperties: foundChoice.customProperties,
         placeholder: foundChoice.placeholder,
-        keyCode: foundChoice.keyCode
+        keyCode: foundChoice.keyCode,
+        classList: foundChoice.classList
       });
     }
   };
@@ -2916,7 +2947,7 @@ exports.DEFAULT_CONFIG = {
   removeItems: true,
   removeItemButton: false,
   editItems: false,
-  allowHTML: true,
+  allowHTML: false,
   duplicateItemsAllowed: true,
   delimiter: ',',
   paste: true,
@@ -2957,7 +2988,8 @@ exports.DEFAULT_CONFIG = {
   labelId: '',
   callbackOnInit: null,
   callbackOnCreateTemplates: null,
-  classNames: exports.DEFAULT_CLASSNAMES
+  classNames: exports.DEFAULT_CLASSNAMES,
+  copyOptionClasses: false
 };
 
 /***/ }),
@@ -3392,6 +3424,7 @@ function choices(state, action) {
           selected: false,
           active: true,
           score: 9999,
+          classList: addChoiceAction.classList || [],
           customProperties: addChoiceAction.customProperties,
           placeholder: addChoiceAction.placeholder || false
         };
@@ -3405,8 +3438,8 @@ function choices(state, action) {
     case 'ADD_ITEM':
       {
         var addItemAction_1 = action;
-        // When an item is added and it has an associated choice,
-        // we want to disable it so it can't be chosen again
+        // When an item is added, and it has an associated choice,
+        // we want to disable it, so it can't be chosen again
         if (addItemAction_1.choiceId > -1) {
           return state.map(function (obj) {
             var choice = obj;
@@ -3615,6 +3648,7 @@ function items(state, action) {
           label: addItemAction.label,
           active: true,
           highlighted: false,
+          classList: addItemAction.classList,
           customProperties: addItemAction.customProperties,
           placeholder: addItemAction.placeholder || false,
           keyCode: null
@@ -3966,7 +4000,8 @@ var templates = {
       active = _b.active,
       disabled = _b.disabled,
       highlighted = _b.highlighted,
-      isPlaceholder = _b.placeholder;
+      isPlaceholder = _b.placeholder,
+      classList = _b.classList;
     var div = Object.assign(document.createElement('div'), (_c = {
       className: item
     }, _c[allowHTML ? 'innerHTML' : 'innerText'] = label, _c));
@@ -3986,6 +4021,9 @@ var templates = {
       div.classList.add(placeholder);
     }
     div.classList.add(highlighted ? highlightedState : itemSelectable);
+    classList === null || classList === void 0 ? void 0 : classList.forEach(function (className) {
+      div.classList.add(className);
+    });
     if (removeItemButton) {
       if (disabled) {
         div.classList.remove(itemSelectable);
@@ -4056,6 +4094,7 @@ var templates = {
       label = _b.label,
       groupId = _b.groupId,
       elementId = _b.elementId,
+      classList = _b.classList,
       isDisabled = _b.disabled,
       isSelected = _b.selected,
       isPlaceholder = _b.placeholder;
@@ -4068,6 +4107,10 @@ var templates = {
     if (isPlaceholder) {
       div.classList.add(placeholder);
     }
+    console.log("class list choice template", classList);
+    classList === null || classList === void 0 ? void 0 : classList.forEach(function (className) {
+      div.classList.add(className);
+    });
     div.setAttribute('role', groupId && groupId > 0 ? 'treeitem' : 'option');
     Object.assign(div.dataset, {
       choice: '',
@@ -4135,11 +4178,16 @@ var templates = {
       value = _a.value,
       customProperties = _a.customProperties,
       active = _a.active,
-      disabled = _a.disabled;
+      disabled = _a.disabled,
+      classList = _a.classList;
     var opt = new Option(label, value, false, active);
     if (customProperties) {
       opt.dataset.customProperties = "".concat(customProperties);
     }
+    console.log("class list option template", classList);
+    classList === null || classList === void 0 ? void 0 : classList.forEach(function (className) {
+      opt.classList.add(className);
+    });
     opt.disabled = !!disabled;
     return opt;
   }

@@ -1840,6 +1840,7 @@ describe('choices', () => {
           groupId: 1,
           value: 'Choice 1',
           label: 'Choice 1',
+          classList: [],
         },
         {
           id: 2,
@@ -1847,6 +1848,7 @@ describe('choices', () => {
           groupId: 2,
           value: 'Choice 2',
           label: 'Choice 2',
+          classList: [],
         },
         {
           id: 3,
@@ -1854,6 +1856,7 @@ describe('choices', () => {
           groupId: 1,
           value: 'Choice 3',
           label: 'Choice 3',
+          classList: [],
         },
       ];
 

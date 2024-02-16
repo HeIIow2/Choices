@@ -195,4 +195,12 @@ label + p {
   margin-right: 8px;
 }
 
+.blue {
+  color: #00bcd4;
+}
+
+.red {
+  color: #ff3b30;
+}
+
 /* =====  End of Section comment block  ====== */

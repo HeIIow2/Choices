@@ -9,6 +9,7 @@ export interface AddItemAction {
     customProperties: object;
     placeholder: boolean;
     keyCode: number;
+    classList?: string[];
 }
 export interface RemoveItemAction {
     type: typeof ACTION_TYPES.REMOVE_ITEM;
@@ -20,7 +21,7 @@ export interface HighlightItemAction {
     id: number;
     highlighted: boolean;
 }
-export declare const addItem: ({ value, label, id, choiceId, groupId, customProperties, placeholder, keyCode, }: {
+export declare const addItem: ({ value, label, id, choiceId, groupId, customProperties, placeholder, keyCode, classList, }: {
     id: number;
     value: string;
     label: string;
@@ -29,6 +30,7 @@ export declare const addItem: ({ value, label, id, choiceId, groupId, customProp
     customProperties: object;
     placeholder: boolean;
     keyCode: number;
+    classList?: string[] | undefined;
 }) => AddItemAction;
 export declare const removeItem: (id: number, choiceId: number) => RemoveItemAction;
 export declare const highlightItem: (id: number, highlighted: boolean) => HighlightItemAction;

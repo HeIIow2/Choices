@@ -1,5 +1,6 @@
 export interface Choice {
     id?: number;
+    classList?: string[];
     customProperties?: Record<string, any>;
     disabled?: boolean;
     active?: boolean;

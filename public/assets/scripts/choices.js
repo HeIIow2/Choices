@@ -341,9 +341,9 @@ var Choices = /** @class */function () {
       this.passedElement.options.forEach(function (option) {
         _this._presetChoices.push({
           value: option.value,
-          label: option.innerHTML.trim(),
+          label: _this._getChoiceText(option),
           selected: !!option.selected,
-          disabled: option.disabled || option.parentNode.disabled,
+          disabled: option.disabled,
           placeholder: option.value === '' || option.hasAttribute('placeholder'),
           customProperties: (0, utils_1.parseCustomProperties)(option.dataset.customProperties),
           classList: _this.config.copyOptionClasses ? Array.from(option.classList) : []
@@ -365,15 +365,14 @@ var Choices = /** @class */function () {
       }
     }
     if (choicesContainer) {
-      var disableAll_1 = choicesContainer.hasAttribute("disabled");
+      // const disableAll = choicesContainer.hasAttribute("disabled");
       Array.from(choicesContainer.children).forEach(function (option) {
         var value = option.getAttribute("value") || "";
-        console.log("class list to push in _presetChoices", Array.from(option.classList));
         _this._presetChoices.push({
           value: value,
-          label: option.innerHTML.trim(),
+          label: _this._getChoiceText(option),
           selected: option.hasAttribute("selected"),
-          disabled: option.hasAttribute("disabled") || disableAll_1,
+          disabled: option.hasAttribute("disabled"),
           placeholder: value === '' || option.hasAttribute('placeholder'),
           customProperties: (0, utils_1.parseCustomProperties)(option.dataset.customProperties),
           classList: _this.config.copyOptionClasses ? Array.from(option.classList) : []
@@ -381,6 +380,7 @@ var Choices = /** @class */function () {
       });
       choicesContainer.remove();
     }
+    this._getChoiceText = this._getChoiceText.bind(this);
     this._render = this._render.bind(this);
     this._onFocus = this._onFocus.bind(this);
     this._onBlur = this._onBlur.bind(this);
@@ -447,6 +447,11 @@ var Choices = /** @class */function () {
     if (callbackOnInit && typeof callbackOnInit === 'function') {
       callbackOnInit.call(this);
     }
+  };
+  Choices.prototype._getChoiceText = function (element) {
+    var text = element.innerHTML;
+    if (this.config.stripWhitespace) text = text.trim();
+    return text.trim();
   };
   Choices.prototype.destroy = function () {
     if (!this.initialised) {
@@ -1795,7 +1800,6 @@ var Choices = /** @class */function () {
     var choiceLabel = label || value;
     var choiceId = choices ? choices.length + 1 : 1;
     var choiceElementId = "".concat(this._baseId, "-").concat(this._idNames.itemChoice, "-").concat(choiceId);
-    console.log("_addChoice", classList, classList || []);
     this._store.dispatch((0, choices_1.addChoice)({
       id: choiceId,
       groupId: groupId,
@@ -1842,7 +1846,7 @@ var Choices = /** @class */function () {
         var isOptDisabled = choice.disabled || choice.parentNode && choice.parentNode.disabled;
         _this._addChoice({
           value: choice[valueKey],
-          label: (0, utils_1.isType)('Object', choice) ? choice[labelKey] : choice.innerHTML,
+          label: (0, utils_1.isType)('Object', choice) ? choice[labelKey] : _this._getChoiceText(choice),
           isSelected: choice.selected,
           isDisabled: isOptDisabled,
           groupId: groupId,
@@ -2989,7 +2993,8 @@ exports.DEFAULT_CONFIG = {
   callbackOnInit: null,
   callbackOnCreateTemplates: null,
   classNames: exports.DEFAULT_CLASSNAMES,
-  copyOptionClasses: false
+  copyOptionClasses: false,
+  stripWhitespace: false
 };
 
 /***/ }),
@@ -4107,7 +4112,6 @@ var templates = {
     if (isPlaceholder) {
       div.classList.add(placeholder);
     }
-    console.log("class list choice template", classList);
     classList === null || classList === void 0 ? void 0 : classList.forEach(function (className) {
       div.classList.add(className);
     });
@@ -4184,7 +4188,6 @@ var templates = {
     if (customProperties) {
       opt.dataset.customProperties = "".concat(customProperties);
     }
-    console.log("class list option template", classList);
     classList === null || classList === void 0 ? void 0 : classList.forEach(function (className) {
       opt.classList.add(className);
     });

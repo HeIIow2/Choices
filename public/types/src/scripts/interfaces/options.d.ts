@@ -472,5 +472,9 @@ export interface Options {
      * the new dropdown items.
      */
     copyOptionClasses: boolean;
+    /**
+     * If true, it strips the whitespaces from the label of the option elements.
+     */
+    stripWhitespace: boolean;
 }
 //# sourceMappingURL=options.d.ts.map

@@ -299,9 +299,9 @@ class Choices implements Choices {
       (this.passedElement as WrappedSelect).options.forEach((option) => {
         this._presetChoices.push({
           value: option.value,
-          label: option.innerHTML.trim(),
+          label: this._getChoiceText(option),
           selected: !!option.selected,
-          disabled: option.disabled || option.parentNode.disabled,
+          disabled: option.disabled,
           placeholder:
             option.value === '' || option.hasAttribute('placeholder'),
           customProperties: parseCustomProperties(
@@ -330,16 +330,16 @@ class Choices implements Choices {
     }
 
     if (choicesContainer ) {
-      const disableAll = choicesContainer.hasAttribute("disabled");
+      // const disableAll = choicesContainer.hasAttribute("disabled");
 
       Array.from(choicesContainer.children).forEach((option: HTMLElement) => {
         let value = option.getAttribute("value") || "";
 
         this._presetChoices.push({
           value: value,
-          label: option.innerHTML.trim(),
+          label: this._getChoiceText(option),
           selected: option.hasAttribute("selected"),
-          disabled: option.hasAttribute("disabled") || disableAll,
+          disabled: option.hasAttribute("disabled"),
           placeholder: value === '' || option.hasAttribute('placeholder'),
           customProperties: parseCustomProperties(option.dataset.customProperties),
           classList: (this.config.copyOptionClasses ? Array.from(option.classList) : []),
@@ -349,6 +349,7 @@ class Choices implements Choices {
       choicesContainer.remove();
     }
 
+    this._getChoiceText = this._getChoiceText.bind(this);
     this._render = this._render.bind(this);
     this._onFocus = this._onFocus.bind(this);
     this._onBlur = this._onBlur.bind(this);
@@ -413,6 +414,12 @@ class Choices implements Choices {
     if (callbackOnInit && typeof callbackOnInit === 'function') {
       callbackOnInit.call(this);
     }
+  }
+
+  _getChoiceText(element: HTMLElement): string {
+    let text = element.innerHTML;
+    if (this.config.stripWhitespace) text = text.trim();
+    return text.trim();
   }
 
   destroy(): void {
@@ -2156,7 +2163,7 @@ class Choices implements Choices {
 
         this._addChoice({
           value: choice[valueKey],
-          label: isType('Object', choice) ? choice[labelKey] : choice.innerHTML,
+          label: isType('Object', choice) ? choice[labelKey] : this._getChoiceText(choice),
           isSelected: choice.selected,
           isDisabled: isOptDisabled,
           groupId,

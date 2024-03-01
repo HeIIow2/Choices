@@ -53,6 +53,7 @@ declare class Choices implements Choices {
     _presetItems: Item[] | string[];
     constructor(element?: string | Element | HTMLInputElement | HTMLSelectElement, userConfig?: Partial<Options>);
     init(): void;
+    _getChoiceText(element: HTMLElement): string;
     destroy(): void;
     enable(): this;
     disable(): this;

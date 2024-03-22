@@ -68,7 +68,6 @@ class Choices implements Choices {
     USER_DEFAULTS = merge(USER_DEFAULTS, defaultOptions);
   }
 
-
   static get defaults(): {
     options: Partial<Options>;
     templates: typeof templates;
@@ -172,7 +171,10 @@ class Choices implements Choices {
     }
 
     // read from data attributes if necessary
-    if (userConfig.allowHTML === undefined && "allowHtml" in passedElement.dataset) {
+    if (
+      userConfig.allowHTML === undefined &&
+      'allowHtml' in passedElement.dataset
+    ) {
       userConfig.allowHTML = passedElement.dataset.allowHtml === 'true';
     }
 
@@ -307,42 +309,53 @@ class Choices implements Choices {
           customProperties: parseCustomProperties(
             option.dataset.customProperties,
           ),
-          classList: (this.config.copyOptionClasses ? Array.from(option.classList) : []),
+          classList: this.config.copyOptionClasses
+            ? Array.from(option.classList)
+            : [],
         });
       });
     }
 
     /*
-    * If an additional option element is defined, then add its children as choices
-    *   data-choices-container
-    * is the attribute that defines the id of the additional option container
-    */
+     * If an additional option element is defined, then add its children as choices
+     *   data-choices-container
+     * is the attribute that defines the id of the additional option container
+     */
 
     let choicesContainer: null | HTMLElement = null;
 
-    let choiceContainerQuery = this.passedElement.element.dataset.choicesContainer || userConfig.choicesContainer;
+    const choiceContainerQuery =
+      this.passedElement.element.dataset.choicesContainer ||
+      userConfig.choicesContainer;
     if (choiceContainerQuery) {
       if (choiceContainerQuery instanceof HTMLElement) {
         choicesContainer = choiceContainerQuery;
       } else {
-        choicesContainer = this.passedElement.element.closest(choiceContainerQuery) || document.getElementById(choiceContainerQuery) || document.querySelector(choiceContainerQuery);
+        choicesContainer =
+          this.passedElement.element.closest(choiceContainerQuery) ||
+          document.getElementById(choiceContainerQuery) ||
+          document.querySelector(choiceContainerQuery);
       }
     }
 
-    if (choicesContainer ) {
+    if (choicesContainer) {
       // const disableAll = choicesContainer.hasAttribute("disabled");
 
       Array.from(choicesContainer.children).forEach((option: HTMLElement) => {
-        let value = option.getAttribute("value") || "";
+        const value = option.getAttribute('value') || '';
 
         this._presetChoices.push({
-          value: value,
+          value,
           label: this._getChoiceText(option),
-          selected: option.hasAttribute("selected"),
-          disabled: option.hasAttribute("disabled"),
+          selected: option.hasAttribute('selected'),
+          disabled: option.hasAttribute('disabled'),
           placeholder: value === '' || option.hasAttribute('placeholder'),
-          customProperties: parseCustomProperties(option.dataset.customProperties),
-          classList: (this.config.copyOptionClasses ? Array.from(option.classList) : []),
+          customProperties: parseCustomProperties(
+            option.dataset.customProperties,
+          ),
+          classList: this.config.copyOptionClasses
+            ? Array.from(option.classList)
+            : [],
         });
       });
 
@@ -414,12 +427,6 @@ class Choices implements Choices {
     if (callbackOnInit && typeof callbackOnInit === 'function') {
       callbackOnInit.call(this);
     }
-  }
-
-  _getChoiceText(element: HTMLElement): string {
-    let text = element.innerHTML;
-    if (this.config.stripWhitespace) text = text.trim();
-    return text.trim();
   }
 
   destroy(): void {
@@ -547,83 +554,6 @@ class Choices implements Choices {
         this._triggerChange(item.value);
       }
     });
-
-    return this;
-  }
-
-  showDropdown(preventInputFocus?: boolean): this {
-    if (this.dropdown.isActive) {
-      return this;
-    }
-
-    requestAnimationFrame(() => {
-      this.dropdown.show();
-      this.containerOuter.open(this.dropdown.distanceFromTopWindow);
-
-      if (!preventInputFocus && this._canSearch) {
-        this.input.focus();
-      }
-
-      this.passedElement.triggerEvent(EVENTS.showDropdown, {});
-    });
-
-    return this;
-  }
-
-  hideDropdown(preventInputBlur?: boolean): this {
-    if (!this.dropdown.isActive) {
-      return this;
-    }
-
-    requestAnimationFrame(() => {
-      this.dropdown.hide();
-      this.containerOuter.close();
-
-      if (!preventInputBlur && this._canSearch) {
-        this.input.removeActiveDescendant();
-        this.input.blur();
-      }
-
-      this.passedElement.triggerEvent(EVENTS.hideDropdown, {});
-    });
-
-    return this;
-  }
-
-  getValue(valueOnly = false): string[] | Item[] | Item | string {
-    const values = this._store.activeItems.reduce<any[]>(
-      (selectedItems, item) => {
-        const itemValue = valueOnly ? item.value : item;
-        selectedItems.push(itemValue);
-
-        return selectedItems;
-      },
-      [],
-    );
-
-    return this._isSelectOneElement ? values[0] : values;
-  }
-
-  setValue(items: string[] | Item[]): this {
-    if (!this.initialised) {
-      return this;
-    }
-
-    items.forEach((value) => this._setChoiceOrItem(value));
-
-    return this;
-  }
-
-  setChoiceByValue(value: string | string[]): this {
-    if (!this.initialised || this._isTextElement) {
-      return this;
-    }
-
-    // If only one value has been passed, convert to array
-    const choiceValue = Array.isArray(value) ? value : [value];
-
-    // Loop through each value and
-    choiceValue.forEach((val) => this._findAndSelectChoiceByValue(val));
 
     return this;
   }
@@ -795,14 +725,79 @@ class Choices implements Choices {
     return this;
   }
 
-  clearChoices(): this {
-    this._store.dispatch(clearChoices());
+  showDropdown(preventInputFocus?: boolean): this {
+    if (this.dropdown.isActive) {
+      return this;
+    }
+
+    requestAnimationFrame(() => {
+      this.dropdown.show();
+      this.containerOuter.open(this.dropdown.distanceFromTopWindow);
+
+      if (!preventInputFocus && this._canSearch) {
+        this.input.focus();
+      }
+
+      this.passedElement.triggerEvent(EVENTS.showDropdown, {});
+    });
 
     return this;
   }
 
-  clearStore(): this {
-    this._store.dispatch(clearAll());
+  hideDropdown(preventInputBlur?: boolean): this {
+    if (!this.dropdown.isActive) {
+      return this;
+    }
+
+    requestAnimationFrame(() => {
+      this.dropdown.hide();
+      this.containerOuter.close();
+
+      if (!preventInputBlur && this._canSearch) {
+        this.input.removeActiveDescendant();
+        this.input.blur();
+      }
+
+      this.passedElement.triggerEvent(EVENTS.hideDropdown, {});
+    });
+
+    return this;
+  }
+
+  getValue(valueOnly = false): string[] | Item[] | Item | string {
+    const values = this._store.activeItems.reduce<any[]>(
+      (selectedItems, item) => {
+        const itemValue = valueOnly ? item.value : item;
+        selectedItems.push(itemValue);
+
+        return selectedItems;
+      },
+      [],
+    );
+
+    return this._isSelectOneElement ? values[0] : values;
+  }
+
+  setValue(items: string[] | Item[]): this {
+    if (!this.initialised) {
+      return this;
+    }
+
+    items.forEach((value) => this._setChoiceOrItem(value));
+
+    return this;
+  }
+
+  setChoiceByValue(value: string | string[]): this {
+    if (!this.initialised || this._isTextElement) {
+      return this;
+    }
+
+    // If only one value has been passed, convert to array
+    const choiceValue = Array.isArray(value) ? value : [value];
+
+    // Loop through each value and
+    choiceValue.forEach((val) => this._findAndSelectChoiceByValue(val));
 
     return this;
   }
@@ -817,6 +812,27 @@ class Choices implements Choices {
     }
 
     return this;
+  }
+
+  clearChoices(): this {
+    this._store.dispatch(clearChoices());
+
+    return this;
+  }
+
+  clearStore(): this {
+    this._store.dispatch(clearAll());
+
+    return this;
+  }
+
+  _getChoiceText(element: HTMLElement): string {
+    let text = element.innerHTML;
+    if (this.config.stripWhitespace) {
+      text = text.trim();
+    }
+
+    return text.trim();
   }
 
   _render(): void {
@@ -2163,13 +2179,17 @@ class Choices implements Choices {
 
         this._addChoice({
           value: choice[valueKey],
-          label: isType('Object', choice) ? choice[labelKey] : this._getChoiceText(choice),
+          label: isType('Object', choice)
+            ? choice[labelKey]
+            : this._getChoiceText(choice),
           isSelected: choice.selected,
           isDisabled: isOptDisabled,
           groupId,
           customProperties: choice.customProperties,
           placeholder: choice.placeholder,
-          classList: (this.config.copyOptionClasses ? Array.from(choice.classList) : []),
+          classList: this.config.copyOptionClasses
+            ? Array.from(choice.classList)
+            : [],
         });
       };
 
@@ -2318,7 +2338,9 @@ class Choices implements Choices {
         isSelected: placeholderChoice.selected,
         isDisabled: placeholderChoice.disabled,
         placeholder: true,
-        classList: (this.config.copyOptionClasses ? Array.from(placeholderChoice.classList) : []),
+        classList: this.config.copyOptionClasses
+          ? Array.from(placeholderChoice.classList)
+          : [],
       });
     }
 
@@ -2342,7 +2364,13 @@ class Choices implements Choices {
     );
 
     choices.forEach((choice, index) => {
-      const { value = '', label, customProperties, placeholder, classList } = choice;
+      const {
+        value = '',
+        label,
+        customProperties,
+        placeholder,
+        classList,
+      } = choice;
 
       if (this._isSelectElement) {
         // If the choice is actually a group
@@ -2372,8 +2400,8 @@ class Choices implements Choices {
             isSelected: !!isSelected,
             isDisabled: !!isDisabled,
             placeholder: !!placeholder,
-            customProperties: customProperties,
-            classList: classList,
+            customProperties,
+            classList,
           });
         }
       } else {
@@ -2383,8 +2411,8 @@ class Choices implements Choices {
           isSelected: !!choice.selected,
           isDisabled: !!choice.disabled,
           placeholder: !!choice.placeholder,
-          customProperties: customProperties,
-          classList: classList,
+          customProperties,
+          classList,
         });
       }
     });
@@ -2429,7 +2457,9 @@ class Choices implements Choices {
             isDisabled: false,
             customProperties: item.customProperties,
             placeholder: item.placeholder,
-            classList: (this.config.copyOptionClasses ? Array.from(item.classList) : []),
+            classList: this.config.copyOptionClasses
+              ? Array.from(item.classList)
+              : [],
           });
         } else {
           this._addItem({
@@ -2438,7 +2468,9 @@ class Choices implements Choices {
             choiceId: item.id,
             customProperties: item.customProperties,
             placeholder: item.placeholder,
-            classList: (this.config.copyOptionClasses ? Array.from(item.classList) : []),
+            classList: this.config.copyOptionClasses
+              ? Array.from(item.classList)
+              : [],
           });
         }
       },

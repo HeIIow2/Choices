@@ -12,7 +12,7 @@ declare const templates: {
     containerInner({ classNames: { containerInner }, }: TemplateOptions): HTMLDivElement;
     itemList({ classNames: { list, listSingle, listItems } }: TemplateOptions, isSelectOneElement: boolean): HTMLDivElement;
     placeholder({ allowHTML, classNames: { placeholder } }: TemplateOptions, value: string): HTMLDivElement;
-    item({ allowHTML, classNames: { item, button, highlightedState, itemSelectable, placeholder, }, }: TemplateOptions, { id, value, label, customProperties, active, disabled, highlighted, placeholder: isPlaceholder, classList: classList, }: Item, removeItemButton: boolean): HTMLDivElement;
+    item({ allowHTML, classNames: { item, button, highlightedState, itemSelectable, placeholder, }, }: TemplateOptions, { id, value, label, customProperties, active, disabled, highlighted, placeholder: isPlaceholder, classList, }: Item, removeItemButton: boolean): HTMLDivElement;
     choiceList({ classNames: { list } }: TemplateOptions, isSelectOneElement: boolean): HTMLDivElement;
     choiceGroup({ allowHTML, classNames: { group, groupHeading, itemDisabled }, }: TemplateOptions, { id, value, disabled }: Group): HTMLDivElement;
     choice({ allowHTML, classNames: { item, itemChoice, itemSelectable, selectedState, itemDisabled, placeholder, }, }: TemplateOptions, { id, value, label, groupId, elementId, classList, disabled: isDisabled, selected: isSelected, placeholder: isPlaceholder, }: Choice, selectText: string): HTMLDivElement;

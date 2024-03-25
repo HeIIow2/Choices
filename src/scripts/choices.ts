@@ -175,6 +175,7 @@ class Choices implements Choices {
       userConfig.allowHTML === undefined &&
       'allowHtml' in passedElement.dataset
     ) {
+      // eslint-disable-next-line no-param-reassign
       userConfig.allowHTML = passedElement.dataset.allowHtml === 'true';
     }
 
@@ -827,7 +828,8 @@ class Choices implements Choices {
   }
 
   _getChoiceText(element: HTMLElement): string {
-    let text = element.innerHTML;
+    let text =
+      element.tagName === 'OPTION' ? element.innerText : element.innerHTML;
     if (this.config.stripWhitespace) {
       text = text.trim();
     }
@@ -2139,7 +2141,7 @@ class Choices implements Choices {
         customProperties,
         placeholder,
         keyCode,
-        classList: classList || [],
+        classList,
       }),
     );
 
@@ -2151,7 +2153,7 @@ class Choices implements Choices {
         customProperties,
         placeholder,
         keyCode,
-        classList: classList || [],
+        classList,
       });
     }
   }
@@ -2427,7 +2429,9 @@ class Choices implements Choices {
           choiceId: item.id,
           customProperties: item.customProperties,
           placeholder: item.placeholder,
-          classList: item.classList,
+          classList: this.config.copyOptionClasses
+            ? Array.from(item.classList)
+            : [],
         });
       }
 

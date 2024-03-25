@@ -53,7 +53,6 @@ declare class Choices implements Choices {
     _presetItems: Item[] | string[];
     constructor(element?: string | Element | HTMLInputElement | HTMLSelectElement, userConfig?: Partial<Options>);
     init(): void;
-    _getChoiceText(element: HTMLElement): string;
     destroy(): void;
     enable(): this;
     disable(): this;
@@ -64,11 +63,6 @@ declare class Choices implements Choices {
     removeActiveItemsByValue(value: string): this;
     removeActiveItems(excludedId: number): this;
     removeHighlightedItems(runEvent?: boolean): this;
-    showDropdown(preventInputFocus?: boolean): this;
-    hideDropdown(preventInputBlur?: boolean): this;
-    getValue(valueOnly?: boolean): string[] | Item[] | Item | string;
-    setValue(items: string[] | Item[]): this;
-    setChoiceByValue(value: string | string[]): this;
     /**
      * Set choices of select input via an array of objects (or function that returns array of object or promise of it),
      * a value field name and a label field name.
@@ -133,9 +127,15 @@ declare class Choices implements Choices {
      * ```
      */
     setChoices(choicesArrayOrFetcher?: Choice[] | Group[] | ((instance: Choices) => Choice[] | Promise<Choice[]>), value?: string, label?: string, replaceChoices?: boolean): this | Promise<this>;
+    showDropdown(preventInputFocus?: boolean): this;
+    hideDropdown(preventInputBlur?: boolean): this;
+    getValue(valueOnly?: boolean): string[] | Item[] | Item | string;
+    setValue(items: string[] | Item[]): this;
+    setChoiceByValue(value: string | string[]): this;
+    clearInput(): this;
     clearChoices(): this;
     clearStore(): this;
-    clearInput(): this;
+    _getChoiceText(element: HTMLElement): string;
     _render(): void;
     _renderChoices(): void;
     _renderItems(): void;

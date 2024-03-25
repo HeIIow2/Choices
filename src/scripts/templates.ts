@@ -98,7 +98,7 @@ const templates = {
       disabled,
       highlighted,
       placeholder: isPlaceholder,
-      classList: classList,
+      classList,
     }: Item,
     removeItemButton: boolean,
   ): HTMLDivElement {

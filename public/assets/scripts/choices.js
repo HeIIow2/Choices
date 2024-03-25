@@ -245,7 +245,8 @@ var Choices = /** @class */function () {
       throw TypeError('Expected one of the following types text|select-one|select-multiple');
     }
     // read from data attributes if necessary
-    if (userConfig.allowHTML === undefined && "allowHtml" in passedElement.dataset) {
+    if (userConfig.allowHTML === undefined && 'allowHtml' in passedElement.dataset) {
+      // eslint-disable-next-line no-param-reassign
       userConfig.allowHTML = passedElement.dataset.allowHtml === 'true';
     }
     /*
@@ -351,10 +352,10 @@ var Choices = /** @class */function () {
       });
     }
     /*
-    * If an additional option element is defined, then add its children as choices
-    *   data-choices-container
-    * is the attribute that defines the id of the additional option container
-    */
+     * If an additional option element is defined, then add its children as choices
+     *   data-choices-container
+     * is the attribute that defines the id of the additional option container
+     */
     var choicesContainer = null;
     var choiceContainerQuery = this.passedElement.element.dataset.choicesContainer || userConfig.choicesContainer;
     if (choiceContainerQuery) {
@@ -367,12 +368,12 @@ var Choices = /** @class */function () {
     if (choicesContainer) {
       // const disableAll = choicesContainer.hasAttribute("disabled");
       Array.from(choicesContainer.children).forEach(function (option) {
-        var value = option.getAttribute("value") || "";
+        var value = option.getAttribute('value') || '';
         _this._presetChoices.push({
           value: value,
           label: _this._getChoiceText(option),
-          selected: option.hasAttribute("selected"),
-          disabled: option.hasAttribute("disabled"),
+          selected: option.hasAttribute('selected'),
+          disabled: option.hasAttribute('disabled'),
           placeholder: value === '' || option.hasAttribute('placeholder'),
           customProperties: (0, utils_1.parseCustomProperties)(option.dataset.customProperties),
           classList: _this.config.copyOptionClasses ? Array.from(option.classList) : []
@@ -447,11 +448,6 @@ var Choices = /** @class */function () {
     if (callbackOnInit && typeof callbackOnInit === 'function') {
       callbackOnInit.call(this);
     }
-  };
-  Choices.prototype._getChoiceText = function (element) {
-    var text = element.innerHTML;
-    if (this.config.stripWhitespace) text = text.trim();
-    return text.trim();
   };
   Choices.prototype.destroy = function () {
     if (!this.initialised) {
@@ -581,71 +577,6 @@ var Choices = /** @class */function () {
       if (runEvent) {
         _this._triggerChange(item.value);
       }
-    });
-    return this;
-  };
-  Choices.prototype.showDropdown = function (preventInputFocus) {
-    var _this = this;
-    if (this.dropdown.isActive) {
-      return this;
-    }
-    requestAnimationFrame(function () {
-      _this.dropdown.show();
-      _this.containerOuter.open(_this.dropdown.distanceFromTopWindow);
-      if (!preventInputFocus && _this._canSearch) {
-        _this.input.focus();
-      }
-      _this.passedElement.triggerEvent(constants_1.EVENTS.showDropdown, {});
-    });
-    return this;
-  };
-  Choices.prototype.hideDropdown = function (preventInputBlur) {
-    var _this = this;
-    if (!this.dropdown.isActive) {
-      return this;
-    }
-    requestAnimationFrame(function () {
-      _this.dropdown.hide();
-      _this.containerOuter.close();
-      if (!preventInputBlur && _this._canSearch) {
-        _this.input.removeActiveDescendant();
-        _this.input.blur();
-      }
-      _this.passedElement.triggerEvent(constants_1.EVENTS.hideDropdown, {});
-    });
-    return this;
-  };
-  Choices.prototype.getValue = function (valueOnly) {
-    if (valueOnly === void 0) {
-      valueOnly = false;
-    }
-    var values = this._store.activeItems.reduce(function (selectedItems, item) {
-      var itemValue = valueOnly ? item.value : item;
-      selectedItems.push(itemValue);
-      return selectedItems;
-    }, []);
-    return this._isSelectOneElement ? values[0] : values;
-  };
-  Choices.prototype.setValue = function (items) {
-    var _this = this;
-    if (!this.initialised) {
-      return this;
-    }
-    items.forEach(function (value) {
-      return _this._setChoiceOrItem(value);
-    });
-    return this;
-  };
-  Choices.prototype.setChoiceByValue = function (value) {
-    var _this = this;
-    if (!this.initialised || this._isTextElement) {
-      return this;
-    }
-    // If only one value has been passed, convert to array
-    var choiceValue = Array.isArray(value) ? value : [value];
-    // Loop through each value and
-    choiceValue.forEach(function (val) {
-      return _this._findAndSelectChoiceByValue(val);
     });
     return this;
   };
@@ -799,12 +730,69 @@ var Choices = /** @class */function () {
     this._stopLoading();
     return this;
   };
-  Choices.prototype.clearChoices = function () {
-    this._store.dispatch((0, choices_1.clearChoices)());
+  Choices.prototype.showDropdown = function (preventInputFocus) {
+    var _this = this;
+    if (this.dropdown.isActive) {
+      return this;
+    }
+    requestAnimationFrame(function () {
+      _this.dropdown.show();
+      _this.containerOuter.open(_this.dropdown.distanceFromTopWindow);
+      if (!preventInputFocus && _this._canSearch) {
+        _this.input.focus();
+      }
+      _this.passedElement.triggerEvent(constants_1.EVENTS.showDropdown, {});
+    });
     return this;
   };
-  Choices.prototype.clearStore = function () {
-    this._store.dispatch((0, misc_1.clearAll)());
+  Choices.prototype.hideDropdown = function (preventInputBlur) {
+    var _this = this;
+    if (!this.dropdown.isActive) {
+      return this;
+    }
+    requestAnimationFrame(function () {
+      _this.dropdown.hide();
+      _this.containerOuter.close();
+      if (!preventInputBlur && _this._canSearch) {
+        _this.input.removeActiveDescendant();
+        _this.input.blur();
+      }
+      _this.passedElement.triggerEvent(constants_1.EVENTS.hideDropdown, {});
+    });
+    return this;
+  };
+  Choices.prototype.getValue = function (valueOnly) {
+    if (valueOnly === void 0) {
+      valueOnly = false;
+    }
+    var values = this._store.activeItems.reduce(function (selectedItems, item) {
+      var itemValue = valueOnly ? item.value : item;
+      selectedItems.push(itemValue);
+      return selectedItems;
+    }, []);
+    return this._isSelectOneElement ? values[0] : values;
+  };
+  Choices.prototype.setValue = function (items) {
+    var _this = this;
+    if (!this.initialised) {
+      return this;
+    }
+    items.forEach(function (value) {
+      return _this._setChoiceOrItem(value);
+    });
+    return this;
+  };
+  Choices.prototype.setChoiceByValue = function (value) {
+    var _this = this;
+    if (!this.initialised || this._isTextElement) {
+      return this;
+    }
+    // If only one value has been passed, convert to array
+    var choiceValue = Array.isArray(value) ? value : [value];
+    // Loop through each value and
+    choiceValue.forEach(function (val) {
+      return _this._findAndSelectChoiceByValue(val);
+    });
     return this;
   };
   Choices.prototype.clearInput = function () {
@@ -815,6 +803,21 @@ var Choices = /** @class */function () {
       this._store.dispatch((0, choices_1.activateChoices)(true));
     }
     return this;
+  };
+  Choices.prototype.clearChoices = function () {
+    this._store.dispatch((0, choices_1.clearChoices)());
+    return this;
+  };
+  Choices.prototype.clearStore = function () {
+    this._store.dispatch((0, misc_1.clearAll)());
+    return this;
+  };
+  Choices.prototype._getChoiceText = function (element) {
+    var text = element.tagName === 'OPTION' ? element.innerText : element.innerHTML;
+    if (this.config.stripWhitespace) {
+      text = text.trim();
+    }
+    return text.trim();
   };
   Choices.prototype._render = function () {
     if (this._store.isLoading()) {
@@ -1810,7 +1813,7 @@ var Choices = /** @class */function () {
       customProperties: customProperties,
       placeholder: placeholder,
       keyCode: keyCode,
-      classList: classList || []
+      classList: classList
     }));
     if (isSelected) {
       this._addItem({
@@ -1820,7 +1823,7 @@ var Choices = /** @class */function () {
         customProperties: customProperties,
         placeholder: placeholder,
         keyCode: keyCode,
-        classList: classList || []
+        classList: classList
       });
     }
   };
@@ -2041,7 +2044,7 @@ var Choices = /** @class */function () {
           choiceId: item.id,
           customProperties: item.customProperties,
           placeholder: item.placeholder,
-          classList: item.classList
+          classList: _this.config.copyOptionClasses ? Array.from(item.classList) : []
         });
       }
       if (typeof item === 'string') {
@@ -3429,7 +3432,7 @@ function choices(state, action) {
           selected: false,
           active: true,
           score: 9999,
-          classList: addChoiceAction.classList || [],
+          classList: addChoiceAction.classList,
           customProperties: addChoiceAction.customProperties,
           placeholder: addChoiceAction.placeholder || false
         };

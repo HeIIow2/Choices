@@ -162,7 +162,7 @@ declare class Choices implements Choices {
     _onEnterKey(event: KeyboardEvent, activeItems: Item[], hasActiveDropdown: boolean): void;
     _onEscapeKey(hasActiveDropdown: boolean): void;
     _onDirectionKey(event: KeyboardEvent, hasActiveDropdown: boolean): void;
-    _onDeleteKey(event: KeyboardEvent, activeItems: Item[], hasFocusedInput: boolean): void;
+    _onDeleteKey(event: KeyboardEvent, activeItems: Item[]): void;
     _onTouchMove(): void;
     _onTouchEnd(event: TouchEvent): void;
     /**

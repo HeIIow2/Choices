@@ -1316,14 +1316,10 @@ var Choices = /** @class */function () {
     this.input.removeEventListeners();
   };
   Choices.prototype._onKeyDown = function (event) {
-    var keyCode = event.keyCode;
     var activeItems = this._store.activeItems;
-    var hasFocusedInput = this.input.isFocussed;
     var hasActiveDropdown = this.dropdown.isActive;
     var hasItems = this.itemList.hasChildren();
-    var keyString = String.fromCharCode(keyCode);
-    // eslint-disable-next-line no-control-regex
-    var wasPrintableChar = /[^\x00-\x1F]/.test(keyString);
+    var wasPrintableChar = event.key.length === 1;
     var BACK_KEY = constants_1.KEY_CODES.BACK_KEY,
       DELETE_KEY = constants_1.KEY_CODES.DELETE_KEY,
       ENTER_KEY = constants_1.KEY_CODES.ENTER_KEY,
@@ -1333,7 +1329,7 @@ var Choices = /** @class */function () {
       DOWN_KEY = constants_1.KEY_CODES.DOWN_KEY,
       PAGE_UP_KEY = constants_1.KEY_CODES.PAGE_UP_KEY,
       PAGE_DOWN_KEY = constants_1.KEY_CODES.PAGE_DOWN_KEY;
-    if (!this._isTextElement && !hasActiveDropdown && wasPrintableChar) {
+    if (!this._isTextElement && wasPrintableChar) {
       this.showDropdown();
       if (!this.input.isFocussed) {
         /*
@@ -1344,7 +1340,7 @@ var Choices = /** @class */function () {
         this.input.value += event.key.toLowerCase();
       }
     }
-    switch (keyCode) {
+    switch (event.keyCode) {
       case A_KEY:
         return this._onSelectKey(event, hasItems);
       case ENTER_KEY:
@@ -1358,7 +1354,7 @@ var Choices = /** @class */function () {
         return this._onDirectionKey(event, hasActiveDropdown);
       case DELETE_KEY:
       case BACK_KEY:
-        return this._onDeleteKey(event, activeItems, hasFocusedInput);
+        return this._onDeleteKey(event, activeItems);
       default:
     }
   };
@@ -1491,10 +1487,10 @@ var Choices = /** @class */function () {
       event.preventDefault();
     }
   };
-  Choices.prototype._onDeleteKey = function (event, activeItems, hasFocusedInput) {
+  Choices.prototype._onDeleteKey = function (event, activeItems) {
     var target = event.target;
     // If backspace or delete key is pressed and the input has no value
-    if (!this._isSelectOneElement && !target.value && hasFocusedInput) {
+    if (!this._isSelectOneElement && !target.value) {
       this._handleBackspace(activeItems);
       event.preventDefault();
     }

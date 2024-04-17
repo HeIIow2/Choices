@@ -1514,14 +1514,10 @@ class Choices implements Choices {
   }
 
   _onKeyDown(event: KeyboardEvent): void {
-    const { keyCode } = event;
     const { activeItems } = this._store;
-    const hasFocusedInput = this.input.isFocussed;
     const hasActiveDropdown = this.dropdown.isActive;
     const hasItems = this.itemList.hasChildren();
-    const keyString = String.fromCharCode(keyCode);
-    // eslint-disable-next-line no-control-regex
-    const wasPrintableChar = /[^\x00-\x1F]/.test(keyString);
+    const wasPrintableChar = event.key.length === 1;
 
     const {
       BACK_KEY,
@@ -1535,7 +1531,7 @@ class Choices implements Choices {
       PAGE_DOWN_KEY,
     } = KEY_CODES;
 
-    if (!this._isTextElement && !hasActiveDropdown && wasPrintableChar) {
+    if (!this._isTextElement && wasPrintableChar) {
       this.showDropdown();
 
       if (!this.input.isFocussed) {
@@ -1548,7 +1544,7 @@ class Choices implements Choices {
       }
     }
 
-    switch (keyCode) {
+    switch (event.keyCode) {
       case A_KEY:
         return this._onSelectKey(event, hasItems);
       case ENTER_KEY:
@@ -1562,7 +1558,7 @@ class Choices implements Choices {
         return this._onDirectionKey(event, hasActiveDropdown);
       case DELETE_KEY:
       case BACK_KEY:
-        return this._onDeleteKey(event, activeItems, hasFocusedInput);
+        return this._onDeleteKey(event, activeItems);
       default:
     }
   }
@@ -1743,18 +1739,10 @@ class Choices implements Choices {
     }
   }
 
-  _onDeleteKey(
-    event: KeyboardEvent,
-    activeItems: Item[],
-    hasFocusedInput: boolean,
-  ): void {
+  _onDeleteKey(event: KeyboardEvent, activeItems: Item[]): void {
     const { target } = event;
     // If backspace or delete key is pressed and the input has no value
-    if (
-      !this._isSelectOneElement &&
-      !(target as HTMLInputElement).value &&
-      hasFocusedInput
-    ) {
+    if (!this._isSelectOneElement && !(target as HTMLInputElement).value) {
       this._handleBackspace(activeItems);
       event.preventDefault();
     }
